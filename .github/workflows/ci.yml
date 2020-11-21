@@ -59,16 +59,17 @@ jobs:
         shell: bash
         run: poetry install
 
-      - name: Pytest run w/ xdist
+      - name: Coverage run w/ xdist
         shell: bash
-        run: poetry run pytest -v -n auto tests
+        run: poetry run coverage run --parallel-mode --source pytest_terraform -m pytest  -v -n auto tests
 
       - name: Coverage run pytest
         shell: bash
-        run: poetry run coverage run --source pytest_terraform -m pytest tests
+        run: poetry run coverage run --parallel-mode --source pytest_terraform -m pytest tests
 
       - name: Coverage Generate XML
         run: |
+          poetry run coverage combine && \
           poetry run coverage xml && \
           bash <(curl -s https://codecov.io/bash) -Z \
           -f coverage.xml
